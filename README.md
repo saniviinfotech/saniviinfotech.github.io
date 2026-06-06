@@ -30,7 +30,7 @@ Sanivi Infotech is a polished static business website for an AI and technology s
 This project is static, so no build step is required.
 
 1. Open `index.html` directly in a browser, or
-2. Use a local server if you prefer, for example with VS Code Live Server
+2. Use a local server if you prefer, for example with VS Code Live Server.
 
 ## Project structure
 
