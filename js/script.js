@@ -4,6 +4,12 @@ function toggleMenu(){
   links.classList.toggle('open');
 }
 
+document.querySelectorAll('.nav-links a').forEach(link=>{
+  link.addEventListener('click',()=>{
+    document.getElementById('navLinks')?.classList.remove('open');
+  });
+});
+
 // Scroll reveal
 const reveals=document.querySelectorAll('.reveal');
 const observer=new IntersectionObserver((entries)=>{
@@ -16,9 +22,34 @@ reveals.forEach(r=>observer.observe(r));
 // Navbar scroll effect
 window.addEventListener('scroll',()=>{
   const nav=document.getElementById('navbar');
-  if(window.scrollY>50){nav.style.background='rgba(13,13,13,0.97)'}
-  else{nav.style.background='rgba(13,13,13,0.85)'}
+  nav.classList.toggle('scrolled',window.scrollY>50);
 });
+
+// Keep floating CTA above the footer.
+const floatingCta=document.querySelector('.floating-cta');
+const footer=document.querySelector('footer');
+let floatingCtaTicking=false;
+
+function positionFloatingCta(){
+  if(!floatingCta || !footer)return;
+  const defaultGap=window.innerWidth<=540 ? 16 : 32;
+  const footerTop=footer.getBoundingClientRect().top;
+  const overlap=window.innerHeight-footerTop;
+  floatingCta.style.bottom=(overlap>0 ? overlap+defaultGap : defaultGap)+'px';
+}
+
+function requestFloatingCtaPosition(){
+  if(floatingCtaTicking)return;
+  floatingCtaTicking=true;
+  requestAnimationFrame(()=>{
+    positionFloatingCta();
+    floatingCtaTicking=false;
+  });
+}
+
+window.addEventListener('scroll',requestFloatingCtaPosition,{passive:true});
+window.addEventListener('resize',positionFloatingCta);
+positionFloatingCta();
 
 // Service card mouse glow
 document.querySelectorAll('.service-card').forEach(card=>{
@@ -33,7 +64,7 @@ document.querySelectorAll('.service-card').forEach(card=>{
 
 // Form submit
 function handleSubmit(btn){
-  btn.innerHTML='Message Sent! We\'ll be in touch soon ✓';
+  btn.innerHTML='Message Sent! We\'ll be in touch soon';
   btn.style.background='#1a6b3a';
   btn.disabled=true;
 }
