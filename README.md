@@ -1,10 +1,10 @@
 # Sanivi Infotech
 
-Sanivi Infotech is a polished static business website for an AI and technology services company. It presents the brand, services, process, tech stack, and contact section across two pages.
+Sanivi Infotech is a polished static business website for an AI and technology services company. It presents the brand, services, process, company story, and contact section across two pages.
 
 ## What's included
 
-- `index.html` - home page with hero, services, problems solved, process, tech stack, and contact form layout
+- `index.html` - home page with hero, services, problems solved, process, and contact form layout
 - `about.html` - company story and founder profiles
 - `css/styles.css` - full visual styling, responsive layouts, animations, and shared components
 - `js/script.js` - mobile menu toggle, scroll reveal effects, counter animation, and form button feedback

@@ -1,13 +1,30 @@
-// Toggle mobile menu
-function toggleMenu(){
-  const links=document.getElementById('navLinks');
-  links.classList.toggle('open');
+// Mobile navigation
+const navLinks=document.getElementById('navLinks');
+const hamburger=document.getElementById('hamburger');
+
+function setMenuState(isOpen){
+  if(!navLinks || !hamburger)return;
+  navLinks.classList.toggle('open',isOpen);
+  hamburger.classList.toggle('open',isOpen);
+  hamburger.setAttribute('aria-expanded',String(isOpen));
+  hamburger.setAttribute('aria-label',isOpen ? 'Close navigation menu' : 'Open navigation menu');
+  document.body.classList.toggle('nav-open',isOpen);
 }
 
+hamburger?.addEventListener('click',()=>{
+  setMenuState(!navLinks?.classList.contains('open'));
+});
+
 document.querySelectorAll('.nav-links a').forEach(link=>{
-  link.addEventListener('click',()=>{
-    document.getElementById('navLinks')?.classList.remove('open');
-  });
+  link.addEventListener('click',()=>setMenuState(false));
+});
+
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape')setMenuState(false);
+});
+
+window.addEventListener('resize',()=>{
+  if(window.innerWidth>860)setMenuState(false);
 });
 
 // Scroll reveal
@@ -22,7 +39,7 @@ reveals.forEach(r=>observer.observe(r));
 // Navbar scroll effect
 window.addEventListener('scroll',()=>{
   const nav=document.getElementById('navbar');
-  nav.classList.toggle('scrolled',window.scrollY>50);
+  nav?.classList.toggle('scrolled',window.scrollY>50);
 });
 
 // Keep floating CTA above the footer.
@@ -69,27 +86,30 @@ function handleSubmit(btn){
   btn.disabled=true;
 }
 
+document.querySelectorAll('[data-form-submit]').forEach(button=>{
+  button.addEventListener('click',()=>handleSubmit(button));
+});
+
 // Counter animation for hero stats
 function animateCounter(el,target){
   let count=0;
   const step=Math.ceil(target/30);
+  const suffix=el.dataset.suffix || '';
   const timer=setInterval(()=>{
     count+=step;
     if(count>=target){count=target;clearInterval(timer)}
-    el.textContent=count;
+    el.textContent=count+suffix;
   },40);
 }
 const statNums=document.querySelectorAll('.stat-item .num');
 const statsObserver=new IntersectionObserver((entries)=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
-      const text=e.target.innerHTML;
-      const match=text.match(/(\d+)/);
+      const text=e.target.textContent.trim();
+      const match=text.match(/^(\d+)(.*)$/);
       if(match){
-        const num=e.target.querySelector('span');
         const val=parseInt(match[1]);
-        e.target.textContent='';
-        if(num)e.target.appendChild(num);
+        e.target.dataset.suffix=match[2] || '';
         animateCounter(e.target,val);
       }
       statsObserver.unobserve(e.target);
